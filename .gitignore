@@ -1,19 +1,31 @@
+# Gradle
+.gradle/
+build/
+*/build/
+buildSrc/build/
+local.properties
+
+# Android
 *.iml
-.gradle
-/local.properties
-/.idea/
+.idea/
 .DS_Store
-/build
-/buildSrc/build
-/captures
-.externalNativeBuild
-.jcstress
 *.apk
+*.aab
+
+# Keystore (sensitive)
+*.jks
+*.jks.base64
+keystore*
+
+# Native
 *.so
 *.o
 *.a
 *.dylib
 *.dll
 *.exe
+
+# Bootstrap (if generated)
 bootstrap/bootstrap.tar.gz
+bootstrap/*.tar.gz
 native/
