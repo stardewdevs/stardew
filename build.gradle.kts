@@ -1,7 +1,3 @@
-plugins {
-    // No plugins needed at root level
-}
-
 buildscript {
     repositories {
         google()
