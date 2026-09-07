@@ -27,12 +27,12 @@ fun getVersionCode(): Int {
 
 android {
     namespace = "io.stardew"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "io.stardew"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 36
         versionCode = getVersionCode()
         versionName = getVersionName()
         archivesBaseName = "stardew"
