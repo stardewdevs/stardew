@@ -79,23 +79,21 @@ android {
     }
 }
 
-// VersionName
 fun getVersionName(): String {
     val buildType = System.getenv("BUILD_TYPE") ?: "debug"
     return when (buildType) {
-        "release" -> "0.1"
-        "beta" -> "0.1.10-beta"
-        else -> "0.1.110-debug"
+        "release" -> project.properties["RELEASE_VERSION_NAME"] as String
+        "beta" -> project.properties["BETA_VERSION_NAME"] as String
+        else -> project.properties["DEBUG_VERSION_NAME"] as String
     }
 }
 
-// VersionCode
 fun getVersionCode(): Int {
     val buildType = System.getenv("BUILD_TYPE") ?: "debug"
     return when (buildType) {
-        "release" -> 1
-        "beta" -> 110
-        else -> 1110
+        "release" -> (project.properties["RELEASE_VERSION_CODE"] as String).toInt()
+        "beta" -> (project.properties["BETA_VERSION_CODE"] as String).toInt()
+        else -> (project.properties["DEBUG_VERSION_CODE"] as String).toInt()
     }
 }
 
@@ -104,16 +102,10 @@ fun getApkFileName(abi: String?, buildType: String): String {
     if (abi == null) {
         return "stardew-universal.apk"
     }
-    val buildTypeInVersion = when (buildType) {
-        "release" -> false
-        else -> true
+    return when (buildType) {
+        "release" -> "stardew-v$version-$buildType-$abi.apk"
+        else -> "stardew-v$version-$abi.apk"
     }
-    val baseName = if (buildTypeInVersion) {
-        "stardew-v$version"
-    } else {
-        "stardew-v$version-$buildType"
-    }
-    return "$baseName-$abi.apk"
 }
 
 dependencies {
