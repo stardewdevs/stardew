@@ -25,6 +25,7 @@ fun getVersionCode(): Int {
         else -> (props["DEBUG_VERSION_CODE"] as? String)?.toInt() ?: 1110
     }
 }
+
 base {
     archivesName.set("stardew")
 }
@@ -65,16 +66,7 @@ android {
             isMinifyEnabled = false
         }
         debug {
-            // Debug settings
-        }
-    }
-
-    applicationVariants.all {
-        val variant = this
-        variant.outputs.map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }.forEach { output ->
-            val typeName = variant.buildType.name
-            val formattedName = "stardew-v${variant.versionName}-$typeName.apk"
-            output.outputFileName = formattedName
+            // Debug defaults settings
         }
     }
 
@@ -93,6 +85,17 @@ android {
 
     kotlinOptions {
         jvmTarget = "17"
+    }
+}
+
+androidComponents {
+    onVariants { variant ->
+        variant.outputs.forEach { output ->
+            val typeName = variant.buildType
+            val currentVersionName = android.defaultConfig.versionName ?: "0.1"
+            val formattedName = "stardew-v${currentVersionName}-$typeName.apk"
+            output.outputFileName.set(formattedName)
+        }
     }
 }
 
