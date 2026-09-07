@@ -35,6 +35,9 @@ android {
         targetSdk = 36
         versionCode = getVersionCode()
         versionName = getVersionName()
+
+        // Gradle 8.x
+        setProperty("archivesBaseName", "stardew")
     }
 
     signingConfigs {
@@ -54,13 +57,16 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            setProperty("archivesBaseName", "stardew-v${getVersionName()}-release")
         }
         create("beta") {
             initWith(getByName("release"))
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
+            setProperty("archivesBaseName", "stardew-v${getVersionName()}-beta")
         }
         debug {
+            setProperty("archivesBaseName", "stardew-v${getVersionName()}-debug")
         }
     }
 
@@ -80,27 +86,6 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-}
-
-tasks.register<Copy>("renameApkOutputs") {
-    val currentVersionName = getVersionName()
-    val buildTypeEnv = System.getenv("BUILD_TYPE") ?: "debug"
-    
-    from(layout.buildDirectory.dir("outputs/apk/$buildTypeEnv"))
-    include("*.apk")
-    into(layout.buildDirectory.dir("outputs/apk/$buildTypeEnv"))
-    
-    rename { fileName ->
-        if (fileName.contains("unsigned") || fileName.contains("aligned")) {
-            fileName
-        } else {
-            "stardew-v${currentVersionName}-${buildTypeEnv}.apk"
-        }
-    }
-}
-
-tasks.matching { it.name.startsWith("assemble") }.configureEach {
-    finalizedBy("renameApkOutputs")
 }
 
 dependencies {
