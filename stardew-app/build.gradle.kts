@@ -82,16 +82,25 @@ android {
     }
 }
 
-androidComponents {
-    onVariants { variant ->
-        variant.outputs.forEach { output ->
-            val typeName = variant.buildType ?: "debug"
-            val currentVersionName = android.defaultConfig.versionName ?: "0.1"
-            
-            // Assigns the target output filename safely into the modern lazy provider property
-            output.outputFileName.set("stardew-v${currentVersionName}-${typeName}.apk")
+tasks.register<Copy>("renameApkOutputs") {
+    val currentVersionName = getVersionName()
+    val buildTypeEnv = System.getenv("BUILD_TYPE") ?: "debug"
+    
+    from(layout.buildDirectory.dir("outputs/apk/$buildTypeEnv"))
+    include("*.apk")
+    into(layout.buildDirectory.dir("outputs/apk/$buildTypeEnv"))
+    
+    rename { fileName ->
+        if (fileName.contains("unsigned") || fileName.contains("aligned")) {
+            fileName
+        } else {
+            "stardew-v${currentVersionName}-${buildTypeEnv}.apk"
         }
     }
+}
+
+tasks.matching { it.name.startsWith("assemble") }.configureEach {
+    finalizedBy("renameApkOutputs")
 }
 
 dependencies {
