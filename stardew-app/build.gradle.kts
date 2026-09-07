@@ -94,7 +94,10 @@ androidComponents {
             val typeName = variant.buildType
             val currentVersionName = android.defaultConfig.versionName ?: "0.1"
             val formattedName = "stardew-v${currentVersionName}-$typeName.apk"
-            output.outputFileName.set(formattedName)
+            
+            if (output is com.android.build.api.variant.VariantOutput) {
+                output.outputFileName.set(formattedName)
+            }
         }
     }
 }
