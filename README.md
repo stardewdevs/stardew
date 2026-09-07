@@ -80,7 +80,7 @@ Package management is handled by mpkg, a custom package manager written in Rust.
 
 ### Filesystem and libc
 
-The filesystem follows FHS standards with standard paths including `/bin`, `/etc`, `/usr`, `/lib`, and `/tmp`. The filesystem layout provides compatibility with standard Linux software. glibc is bundled alongside the application, allowing standard Linux binaries to run without patching. PRoot is included for running full Linux distributions without root access. The filesystem supports standard POSIX permissions and ownership, ensuring compatibility with tools that rely on these features.
+The filesystem follows FHS standards with standard paths including `/bin`, `/etc`, `/usr`, `/lib`, and `/tmp`. The filesystem layout provides compatibility with standard Linux software. sglibc is bundled alongside the application, allowing standard Linux binaries to run without patching. PRoot is included for running full Linux distributions without root access. The filesystem supports standard POSIX permissions and ownership, ensuring compatibility with tools that rely on these features.
 
 ### User Interface
 
@@ -148,7 +148,7 @@ APKs are available for download from the Releases section on GitHub. Installatio
 
 ### System Requirements
 
-Stardew requires Android 8.0 (API 26) or newer. The application has been tested on Android 8.0 through Android 15 and is actively maintained for Android 15 and later. The application supports ARM64 (aarch64) and ARMv7 (armeabi-v7a) architectures. Support for x86 and x86_64 architectures is planned.
+Stardew requires Android 8.0 (API 26) or newer. The application has been tested on Android 8.0 through Android 15 and is actively maintained for Android 15 and later. The application supports ARM64 (aarch64), ARMv7 (armeabi-v7a), x86 and x86_64 architectures.
 
 ### Recommended Setup
 
@@ -188,10 +188,6 @@ cargo ndk -t universal -o ../stardew-app/src/main/jniLibs build --release
 ### Building the Full Package
 
 For a complete build, the application and all plugins must be built from source. The main application includes references to plugin modules that must be built separately. The recommended approach is to build all components using the Gradle wrapper, which coordinates the build of all modules.
-
-### CI/CD
-
-Stardew uses GitHub Actions for continuous integration and delivery. The CI pipeline builds the application on every push to the main branch, runs automated tests, and creates APK artifacts. The pipeline uses Android Emulator for testing and SonarQube for static code analysis.
 
 ---
 
@@ -234,3 +230,7 @@ Stardew uses several open-source libraries and components. Alacritty Terminal pr
 ### Contributors
 
 The Stardew project is grateful to all contributors who have helped with development, testing, documentation, and support. A complete list of contributors is available in the CONTRIBUTORS.md file.
+
+---
+
+### Thanks you for reading
