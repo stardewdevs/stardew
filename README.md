@@ -2,7 +2,7 @@
 
 [Stardew](https://github.com/stardewdevs/stardew) is a modern Android terminal application and Linux environment built with Kotlin and Rust.
 
-Note that this repository is for the app itself (the user interface and the terminal emulation). For the packages installable inside the app, see [stardewdevs/stardew-packages](https://github.com/stardewdevs/stardew-packages).
+Note that this repository is for the app itself (the user interface and the terminal emulation). For the packages installable inside the app, see [stardewdevs/stardew-packages](https://github.com/stardewdevs/packages).
 
 Quick how-to about Stardew package management is available at [Package Management](https://github.com/stardewdevs/stardew-packages/wiki/Package-Management). It also has info on how to fix repository is under maintenance or down errors when running apt or pkg commands.
 
@@ -76,7 +76,7 @@ The renderer uses Vulkan to provide GPU-accelerated rendering, delivering smooth
 
 ### Package Management
 
-Package management is handled by mpkg, a custom package manager written in Rust. Mpkg uses declarative JSON manifests instead of maintainer scripts, eliminating the failure-prone dpkg system. The manifests specify package metadata, dependencies, conflicts, and installed files. The installation process uses atomic transactions with instant rollback. If any step of an installation fails, the entire transaction is rolled back, leaving the system in a consistent state. Parallel downloads support up to eight simultaneous downloads, significantly reducing installation time. Multiple repository mirrors with automatic failover provide reliability. The SQLite database provides fast and reliable package tracking.
+Package management is handled by mpkg, a custom package manager written in Rust. mpkg uses declarative JSON manifests instead of maintainer scripts, eliminating the failure-prone dpkg system. The manifests specify package metadata, dependencies, conflicts, and installed files. The installation process uses atomic transactions with instant rollback. If any step of an installation fails, the entire transaction is rolled back, leaving the system in a consistent state. Parallel downloads support up to eight simultaneous downloads, significantly reducing installation time. Multiple repository mirrors with automatic failover provide reliability. The SQLite database provides fast and reliable package tracking.
 
 ### Filesystem and libc
 
@@ -168,25 +168,21 @@ Android Studio Ladybug or newer is required for building the Android application
 
 Clone the repository and navigate to the project directory. Build the APK using the Gradle wrapper. The resulting APK will be placed in the build output directory.
 
-```
-
+```bash
 git clone https://github.com/stardewdevs/stardew.git
 cd stardew
 ./gradlew assembleDebug
 ./gradlew installDebug
-
 ```
 
 ### Building Rust Components
 
 The Rust components must be built separately using the cargo-ndk tool. Install cargo-ndk and build for the target architecture. The built library will be placed in the appropriate jniLibs directory.
 
-```
-
+```bash
 cargo install cargo-ndk
 cd stardew-emulator
-cargo ndk -t arm64-v8a -o ../stardew-app/src/main/jniLibs build --release
-
+cargo ndk -t universal -o ../stardew-app/src/main/jniLibs build --release
 ```
 
 ### Building the Full Package
@@ -219,11 +215,11 @@ UI and UX design is an ongoing need for the project. Rust development, particula
 
 ## License
 
-Stardew is licensed under the GPLv3 License. This license applies to all source code in this repository. By using, modifying, or distributing this software, you agree to the terms of the GPLv3 License.
+Stardew is licensed under the Apache 2.0q License. This license applies to all source code in this repository. By using, modifying, or distributing this software, you agree to the terms of the Apache 2.0 License.
 
 ### Commercial Licensing
 
-For commercial licensing options, please contact the project maintainers. The GPLv3 license does not permit proprietary use of the software unless the source code is made available under the same license.
+For commercial licensing options, please contact the project maintainers. The Apache 2.0 license does not permit proprietary use of the software unless the source code is made available under the same license.
 
 ---
 
