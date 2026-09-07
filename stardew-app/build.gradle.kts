@@ -3,16 +3,39 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+// VersionName
+fun getVersionName(): String {
+    val buildType = System.getenv("BUILD_TYPE") ?: "debug"
+    val props = project.properties
+    return when (buildType) {
+        "release" -> (props["RELEASE_VERSION_NAME"] as? String) ?: "0.1"
+        "beta" -> (props["BETA_VERSION_NAME"] as? String) ?: "0.1.10-beta"
+        else -> (props["DEBUG_VERSION_NAME"] as? String) ?: "0.1.110-debug"
+    }
+}
+
+// VersionCode
+fun getVersionCode(): Int {
+    val buildType = System.getenv("BUILD_TYPE") ?: "debug"
+    val props = project.properties
+    return when (buildType) {
+        "release" -> (props["RELEASE_VERSION_CODE"] as? String)?.toInt() ?: 1
+        "beta" -> (props["BETA_VERSION_CODE"] as? String)?.toInt() ?: 110
+        else -> (props["DEBUG_VERSION_CODE"] as? String)?.toInt() ?: 1110
+    }
+}
+
 android {
     namespace = "io.stardew"
-    compileSdk = 36
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "io.stardew"
         minSdk = 26
-        targetSdk = 36
-        versionName = getVersionName()
+        targetSdk = 34
         versionCode = getVersionCode()
+        versionName = getVersionName()
+        archivesBaseName = "stardew"
     }
 
     signingConfigs {
@@ -32,23 +55,16 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            archivesBaseName = "stardew-v${getVersionName()}-release"
         }
         create("beta") {
             initWith(getByName("release"))
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
+            archivesBaseName = "stardew-v${getVersionName()}-beta"
         }
         debug {
-            // default
-        }
-    }
-
-    splits {
-        abi {
-            isEnable = true
-            reset()
-            include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-            isUniversalApk = true
+            archivesBaseName = "stardew-v${getVersionName()}-debug"
         }
     }
 
@@ -67,49 +83,6 @@ android {
 
     kotlinOptions {
         jvmTarget = "17"
-    }
-}
-
-// Move the output configuration to afterEvaluate to avoid mutation errors
-afterEvaluate {
-    android.applicationVariants.all { variant ->
-        variant.outputs.forEach { output ->
-            val abi = output.filters?.find { it.filterType == "abi" }?.identifier
-            val buildType = variant.buildType.name
-            output.versionCodeOverride = getVersionCode()
-            output.outputFileName = getApkFileName(abi, buildType)
-        }
-    }
-}
-
-fun getVersionName(): String {
-    val buildType = System.getenv("BUILD_TYPE") ?: "debug"
-    val props = project.properties
-    return when (buildType) {
-        "release" -> (props["RELEASE_VERSION_NAME"] as? String) ?: "0.1"
-        "beta" -> (props["BETA_VERSION_NAME"] as? String) ?: "0.1.10-beta"
-        else -> (props["DEBUG_VERSION_NAME"] as? String) ?: "0.1.110-debug"
-    }
-}
-
-fun getVersionCode(): Int {
-    val buildType = System.getenv("BUILD_TYPE") ?: "debug"
-    val props = project.properties
-    return when (buildType) {
-        "release" -> (props["RELEASE_VERSION_CODE"] as? String)?.toInt() ?: 1
-        "beta" -> (props["BETA_VERSION_CODE"] as? String)?.toInt() ?: 110
-        else -> (props["DEBUG_VERSION_CODE"] as? String)?.toInt() ?: 1110
-    }
-}
-
-fun getApkFileName(abi: String?, buildType: String): String {
-    val version = getVersionName()
-    if (abi == null) {
-        return "stardew-universal.apk"
-    }
-    return when (buildType) {
-        "release" -> "stardew-v$version-$buildType-$abi.apk"
-        else -> "stardew-v$version-$abi.apk"
     }
 }
 
