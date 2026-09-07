@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("base") 
 }
 
 // VersionName
@@ -24,6 +25,9 @@ fun getVersionCode(): Int {
         else -> (props["DEBUG_VERSION_CODE"] as? String)?.toInt() ?: 1110
     }
 }
+base {
+    archivesName.set("stardew")
+}
 
 android {
     namespace = "io.stardew"
@@ -35,7 +39,6 @@ android {
         targetSdk = 36
         versionCode = getVersionCode()
         versionName = getVersionName()
-        setProperty("archivesBaseName", "stardew")
     }
 
     signingConfigs {
@@ -55,16 +58,23 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            setProperty("archivesBaseName", "stardew-v${getVersionName()}-release")
         }
         create("beta") {
             initWith(getByName("release"))
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
-            setProperty("archivesBaseName", "stardew-v${getVersionName()}-beta")
         }
         debug {
-            setProperty("archivesBaseName", "stardew-v${getVersionName()}-debug")
+            // Debug settings
+        }
+    }
+
+    applicationVariants.all {
+        val variant = this
+        variant.outputs.map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }.forEach { output ->
+            val typeName = variant.buildType.name
+            val formattedName = "stardew-v${variant.versionName}-$typeName.apk"
+            output.outputFileName = formattedName
         }
     }
 
