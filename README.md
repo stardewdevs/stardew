@@ -233,4 +233,4 @@ The Stardew project is grateful to all contributors who have helped with develop
 
 ---
 
-### Thanks you for reading
+### Thank you for having time with stardew
