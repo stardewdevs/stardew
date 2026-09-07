@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<io.stardew.shared.termux.extrakeys.ExtraKeysView xmlns:android="http://schemas.android.io_stardew/apk/res/android"
-    android:id="@+id/terminal_toolbar_extra_keys"
-    style="?android:attr/buttonBarStyle"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_alignParentBottom="true"
-    android:orientation="horizontal" />

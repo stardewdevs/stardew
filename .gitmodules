@@ -1,9 +1,9 @@
 [submodule "submodules/sglibc"]
-	path = submodules/sglibc
-	url = https://github.com/stardewdevs/sglibc.git
+    path = submodules/sglibc
+    url = https://github.com/stardewdevs/sglibc.git
 [submodule "submodules/sproot"]
-	path = submodules/sproot
-	url = https://github.com/stardewdevs/sproot.git
+    path = submodules/sproot
+    url = https://github.com/stardewdevs/sproot.git
 [submodule "submodules/scoomp"]
-	path = submodules/scoomp
-	url = https://github.com/stardewdevs/scoomp.git
+    path = submodules/scoomp
+    url = https://github.com/stardewdevs/scoomp.git

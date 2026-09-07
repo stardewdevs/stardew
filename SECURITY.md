@@ -1,1 +1,11 @@
-Check https://termux.dev/security for info on Termux security policies and how to report vulnerabilities.
+# Security Policy
+
+## Supported Versions
+
+Only the latest version of Stardew is supported with security updates.
+
+## Reporting a Vulnerability
+
+Please report security vulnerabilities by opening an issue or contacting the maintainers directly.
+
+We will respond within 48 hours.
