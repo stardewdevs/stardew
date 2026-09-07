@@ -34,11 +34,11 @@ android {
             )
         }
         beta {
-            initWith(getByName("release"))
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
         }
         debug {
+            // no signing config needed
         }
     }
 
@@ -79,21 +79,25 @@ android {
     }
 }
 
+// ─── Helpers ────────────────────────────────────────
+
 fun getVersionName(): String {
     val buildType = System.getenv("BUILD_TYPE") ?: "debug"
+    val props = project.properties
     return when (buildType) {
-        "release" -> project.properties["RELEASE_VERSION_NAME"] as String
-        "beta" -> project.properties["BETA_VERSION_NAME"] as String
-        else -> project.properties["DEBUG_VERSION_NAME"] as String
+        "release" -> (props["RELEASE_VERSION_NAME"] as? String) ?: "0.1"
+        "beta" -> (props["BETA_VERSION_NAME"] as? String) ?: "0.1.10-beta"
+        else -> (props["DEBUG_VERSION_NAME"] as? String) ?: "0.1.110-debug"
     }
 }
 
 fun getVersionCode(): Int {
     val buildType = System.getenv("BUILD_TYPE") ?: "debug"
+    val props = project.properties
     return when (buildType) {
-        "release" -> (project.properties["RELEASE_VERSION_CODE"] as String).toInt()
-        "beta" -> (project.properties["BETA_VERSION_CODE"] as String).toInt()
-        else -> (project.properties["DEBUG_VERSION_CODE"] as String).toInt()
+        "release" -> (props["RELEASE_VERSION_CODE"] as? String)?.toInt() ?: 1
+        "beta" -> (props["BETA_VERSION_CODE"] as? String)?.toInt() ?: 110
+        else -> (props["DEBUG_VERSION_CODE"] as? String)?.toInt() ?: 1110
     }
 }
 
@@ -107,6 +111,8 @@ fun getApkFileName(abi: String?, buildType: String): String {
         else -> "stardew-v$version-$abi.apk"
     }
 }
+
+// ─── Dependencies ───────────────────────────────────
 
 dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
