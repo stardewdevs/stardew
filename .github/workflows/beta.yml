@@ -1,0 +1,45 @@
+name: beta - APK
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > keystore.jks
+
+      - name: Build Beta APK
+        env:
+          BUILD_TYPE: beta
+          KEYSTORE_PATH: keystore.jks
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: ./gradlew assembleBeta
+
+      - name: List Generated APKs
+        run: ls -la stardew-app/build/outputs/apk/beta/
+
+      - name: Upload Beta APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: stardew-beta
+          path: stardew-app/build/outputs/apk/beta/*.apk
