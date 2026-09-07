@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "io.stardew"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "io.stardew"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 36
         versionName = getVersionName()
         versionCode = getVersionCode()
     }
