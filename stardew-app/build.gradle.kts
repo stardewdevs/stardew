@@ -83,13 +83,13 @@ android {
 }
 
 afterEvaluate {
-    extensions.configure<com.android.build.gradle.AppExtension>("android") {
+    configure<com.android.build.gradle.AppExtension> {
         applicationVariants.all {
             val variant = this
             val currentVersionName = variant.versionName ?: "0.1"
             val typeName = variant.buildType.name
             variant.outputs.all {
-                val output = this as com.android.build.gradle.outputs.BaseVariantOutput
+                val output = this as com.android.build.VariantOutput
                 output.outputFileName = "stardew-v${currentVersionName}-${typeName}.apk"
             }
         }
