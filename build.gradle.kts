@@ -1,12 +1,5 @@
 plugins {
-    // Apply common plugins if needed
-}
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
+    // no plugins
 }
 
 tasks.register("clean", Delete::class) {
