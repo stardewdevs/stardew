@@ -1,10 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("base") 
 }
 
-// VersionName
 fun getVersionName(): String {
     val buildType = System.getenv("BUILD_TYPE") ?: "debug"
     val props = project.properties
@@ -15,7 +13,6 @@ fun getVersionName(): String {
     }
 }
 
-// VersionCode
 fun getVersionCode(): Int {
     val buildType = System.getenv("BUILD_TYPE") ?: "debug"
     val props = project.properties
@@ -24,10 +21,6 @@ fun getVersionCode(): Int {
         "beta" -> (props["BETA_VERSION_CODE"] as? String)?.toInt() ?: 110
         else -> (props["DEBUG_VERSION_CODE"] as? String)?.toInt() ?: 1110
     }
-}
-
-base {
-    archivesName.set("stardew")
 }
 
 android {
@@ -66,7 +59,7 @@ android {
             isMinifyEnabled = false
         }
         debug {
-            // Debug defaults settings
+            // Default debug settings
         }
     }
 
@@ -88,18 +81,22 @@ android {
     }
 }
 
+import com.android.build.api.variant.Variant
+import com.android.build.api.variant.impl.VariantOutputImpl
+
 androidComponents {
-    onVariants { variant ->
+    onVariants { variant: Variant ->
         variant.outputs.forEach { output ->
-            val typeName = variant.buildType
-            val currentVersionName = android.defaultConfig.versionName ?: "0.1"
-            val formattedName = "stardew-v${currentVersionName}-$typeName.apk"
-            
-            if (output is com.android.build.api.variant.VariantOutput) {
-                output.outputFileName.set(formattedName)
-            }
+            val apkOutput = output as? VariantOutputImpl
+            apkOutput?.outputFileName = getFormattedApkName(variant)
         }
     }
+}
+
+fun getFormattedApkName(variant: Variant): String {
+    val versionName = getVersionName()
+    val buildType = variant.buildType
+    return "stardew-v${versionName}-${buildType}.apk"
 }
 
 dependencies {
