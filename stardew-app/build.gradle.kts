@@ -35,7 +35,7 @@ android {
         targetSdk = 36
         versionCode = getVersionCode()
         versionName = getVersionName()
-        archivesBaseName = "stardew"
+        setProperty("archivesBaseName", "stardew")
     }
 
     signingConfigs {
@@ -55,16 +55,16 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            archivesBaseName = "stardew-v${getVersionName()}-release"
+            setProperty("archivesBaseName", "stardew-v${getVersionName()}-release")
         }
         create("beta") {
             initWith(getByName("release"))
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
-            archivesBaseName = "stardew-v${getVersionName()}-beta"
+            setProperty("archivesBaseName", "stardew-v${getVersionName()}-beta")
         }
         debug {
-            archivesBaseName = "stardew-v${getVersionName()}-debug"
+            setProperty("archivesBaseName", "stardew-v${getVersionName()}-debug")
         }
     }
 
