@@ -11,6 +11,20 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        abi: [arm64-v8a, armeabi-v7a, x86, x86_64, universal]
+        include:
+          - abi: universal
+            abiFilter: ''
+          - abi: arm64-v8a
+            abiFilter: arm64-v8a
+          - abi: armeabi-v7a
+            abiFilter: armeabi-v7a
+          - abi: x86
+            abiFilter: x86
+          - abi: x86_64
+            abiFilter: x86_64
 
     steps:
       - name: Checkout code
@@ -25,16 +39,22 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Build Debug APK
+      - name: Build Debug APK for ${{ matrix.abi }}
         env:
           BUILD_TYPE: debug
-        run: ./gradlew assembleDebug --stacktrace --warning-mode all
+        run: |
+          if [ "${{ matrix.abi }}" = "universal" ]; then
+            ./gradlew assembleDebug
+            # Rename universal APK to include -universal
+            for f in stardew-app/build/outputs/apk/debug/*.apk; do
+              mv "$f" "${f%.apk}-universal.apk"
+            done
+          else
+            ./gradlew assembleDebug -Pandroid.abiFilters=${{ matrix.abiFilter }}
+          fi
 
-      - name: List Generated APKs
-        run: ls -la stardew-app/build/outputs/apk/debug/
-
-      - name: Upload Debug APK
+      - name: Upload APK Artifact for ${{ matrix.abi }}
         uses: actions/upload-artifact@v7
         with:
-          name: stardew-debug
+          name: stardew-debug-${{ matrix.abi }}
           path: stardew-app/build/outputs/apk/debug/*.apk
