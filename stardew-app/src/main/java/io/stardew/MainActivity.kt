@@ -14,7 +14,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             StardewTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                // placeholder
+                    // Empty content – add your UI here later
                 }
             }
         }
