@@ -89,7 +89,7 @@ afterEvaluate {
             val currentVersionName = variant.versionName ?: "0.1"
             val typeName = variant.buildType.name
             variant.outputs.all {
-                val output = this as com.android.build.VariantOutput
+                val output = this as com.android.build.gradle.internal.api.ApkVariantOutputImpl
                 output.outputFileName = "stardew-v${currentVersionName}-${typeName}.apk"
             }
         }
