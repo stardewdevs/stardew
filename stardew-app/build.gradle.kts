@@ -88,12 +88,8 @@ androidComponents {
             val typeName = variant.buildType ?: "debug"
             val currentVersionName = android.defaultConfig.versionName ?: "0.1"
             
-            // Correct AGP 9+ method: Explicitly map the output file path destination
-            output.outputFile.set(
-                variant.outputsDir.map { dir ->
-                    dir.resolve("stardew-v${currentVersionName}-${typeName}.apk")
-                }
-            )
+            // Assigns the target output filename safely into the modern lazy provider property
+            output.outputFileName.set("stardew-v${currentVersionName}-${typeName}.apk")
         }
     }
 }
