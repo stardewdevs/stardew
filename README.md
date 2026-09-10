@@ -2,7 +2,7 @@
 
 [Stardew](https://github.com/stardewdevs/stardew) is a modern Android terminal application and Linux environment built with Kotlin and Rust.
 
-Note that this repository is for the app itself (the user interface and the terminal emulation). For the packages installable inside the app, see [stardewdevs/stardew-packages](https://github.com/stardewdevs/packages).
+Note that this repository is for the app itself (the user interface and the terminal emulation). For the packages installable inside the app, see [stardewdevs/packages](https://github.com/stardewdevs/packages).
 
 Quick how-to about Stardew package management is available at [Package Management](https://github.com/stardewdevs/stardew-packages/wiki/Package-Management). It also has info on how to fix repository is under maintenance or down errors when running apt or pkg commands.
 
@@ -12,15 +12,15 @@ We are looking for Stardew Android application maintainers.
 
 ## Contents
 
-- [Fixed Issues](#fixed-issues)
-- [Features](#features)
-- [Technical Architecture](#technical-architecture)
-- [Why Stardew?](#why-stardew)
-- [Installation](#installation)
-- [Building from Source](#building-from-source)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgements](#acknowledgements)
+- [`Fixed Issues`](#fixed-issues)
+- [`Features`](#features)
+- [`Technical Architecture`](#technical-architecture)
+- [`Why Stardew?`](#why-stardew)
+- [`Installation`](#installation)
+- [`Building from Source`](#building-from-source)
+- [`Contributing`](#contributing)
+- [`License`](#License)
+- [`Acknowledgements`](#acknowledgements)
 
 ---
 
@@ -34,7 +34,7 @@ Android 12 introduced aggressive background process management that limits the n
 
 ### dpkg Failures and Package Management Issues
 
-The combination of apt and dpkg used in Termux is prone to a wide variety of failures. These include the infamous dpkg trigger errors, configuration failures, and post-installation script errors. Many of these failures occur because Termux is missing tools and paths that Debian packages expect, such as ldconfig, standard FHS paths, and full POSIX shell environments. The maintainer scripts that run during package installation frequently fail, leaving the system in an inconsistent state. Stardew replaces this fragile system with mpkg, a custom package manager written in Rust. Mpkg uses declarative JSON manifests instead of shell scripts for package metadata and installation instructions. This eliminates the failure-prone maintainer scripts entirely. The installation process is atomic, meaning that if any step fails, the entire transaction is rolled back to a consistent state, leaving the system untouched. This approach eliminates the common scenario where a failed package installation leaves the package manager in a broken state requiring manual intervention.
+The combination of apt and dpkg used in Termux is prone to a wide variety of failures. These include the infamous dpkg trigger errors, configuration failures, and post-installation script errors. Many of these failures occur because Termux is missing tools and paths that Debian packages expect, such as ldconfig, standard FHS paths, and full POSIX shell environments. The maintainer scripts that run during package installation frequently fail, leaving the system in an inconsistent state. Stardew replaces this fragile system with mdpkg, a custom package manager written in Rust. Mdpkg uses declarative JSON manifests instead of shell scripts for package metadata and installation instructions. This eliminates the failure-prone maintainer scripts entirely. The installation process is atomic, meaning that if any step fails, the entire transaction is rolled back to a consistent state, leaving the system untouched. This approach eliminates the common scenario where a failed package installation leaves the package manager in a broken state requiring manual intervention.
 
 ### Bionic Libc Incompatibility
 
@@ -76,11 +76,11 @@ The renderer uses Vulkan to provide GPU-accelerated rendering, delivering smooth
 
 ### Package Management
 
-Package management is handled by mpkg, a custom package manager written in Rust. mpkg uses declarative JSON manifests instead of maintainer scripts, eliminating the failure-prone dpkg system. The manifests specify package metadata, dependencies, conflicts, and installed files. The installation process uses atomic transactions with instant rollback. If any step of an installation fails, the entire transaction is rolled back, leaving the system in a consistent state. Parallel downloads support up to eight simultaneous downloads, significantly reducing installation time. Multiple repository mirrors with automatic failover provide reliability. The SQLite database provides fast and reliable package tracking.
+Package management is handled by mdpkg, a custom package manager written in Rust. mpkg uses declarative JSON manifests instead of maintainer scripts, eliminating the failure-prone dpkg system. The manifests specify package metadata, dependencies, conflicts, and installed files. The installation process uses atomic transactions with instant rollback. If any step of an installation fails, the entire transaction is rolled back, leaving the system in a consistent state. Parallel downloads support up to eight simultaneous downloads, significantly reducing installation time. Multiple repository mirrors with automatic failover provide reliability. The SQLite database provides fast and reliable package tracking.
 
 ### Filesystem and libc
 
-The filesystem follows FHS standards with standard paths including `/bin`, `/etc`, `/usr`, `/lib`, and `/tmp`. The filesystem layout provides compatibility with standard Linux software. sglibc is bundled alongside the application, allowing standard Linux binaries to run without patching. PRoot is included for running full Linux distributions without root access. The filesystem supports standard POSIX permissions and ownership, ensuring compatibility with tools that rely on these features.
+The filesystem follows FHS standards with standard paths including `/bin`, `/etc`, `/usr`, `/lib`, and `/tmp`. The filesystem layout provides compatibility with standard Linux software. sglibc is bundled alongside the application, allowing standard Linux binaries to run without patching. propoot is included for running full Linux distributions without root access. The filesystem supports standard POSIX permissions and ownership, ensuring compatibility with tools that rely on these features.
 
 ### User Interface
 
@@ -128,13 +128,13 @@ The PTY layer uses the portable-pty crate for PTY creation and management and th
 
 ## Why Stardew?
 
-Termux pioneered the concept of running a Linux environment on Android and remains a widely used and respected application. However, it was built on technologies and assumptions that have not aged well in the rapidly evolving Android ecosystem.
+Termux has started the concept of running a Linux environment on Android and remains a widely used and respected application. However, it was built on technologies and assumptions that have not aged well in the rapidly evolving Android ecosystem.
 
 The Android platform has undergone significant changes since Termux was first released in 2015. Android 12 introduced aggressive background process killing that renders Termux unreliable for long-running tasks. Android 15 and 16 have introduced further restrictions that break core functionality. Security hardening measures have made it increasingly difficult to run command-line tools on Android.
 
 The underlying technologies used by Termux have also aged. The Java-based terminal emulator is slower and less memory-efficient than modern alternatives. The use of dpkg and apt for package management, inherited from Debian, introduces complexity and failure modes that are difficult to avoid on Android. The reliance on Bionic libc creates compatibility issues that require extensive patching of standard Linux software.
 
-Stardew addresses these challenges by building on modern foundations. The use of Rust provides memory safety and performance that is difficult to achieve with C and C++. The adoption of Kotlin and Jetpack Compose brings the user interface into the modern era of Android development. The switch from Bionic to glibc resolves a decade of compatibility issues with standard Linux binaries. The replacement of dpkg with mpkg eliminates the most common source of package management failures. The integration of hardware access into the main application provides a unified and reliable experience.
+Stardew addresses these challenges by building on modern foundations. The use of Rust provides memory safety and performance that is difficult to achieve with C and C++. The adoption of Kotlin and Jetpack Compose brings the user interface into the modern era of Android development. The switch from Bionic to sglibc resolves a decade of compatibility issues with standard Linux binaries. The replacement of dpkg with mdpkg eliminates the most common source of package management failures. The integration of hardware access into the main application provides a unified and reliable experience.
 
 The result is a terminal emulator that is not just a successor to Termux, but a complete reimagining of what a mobile terminal can be. It combines the power of a full Linux environment with modern Android development practices, providing a reliable, performant, and extensible platform for mobile development.
 
@@ -142,7 +142,7 @@ The result is a terminal emulator that is not just a successor to Termux, but a 
 
 ## Installation
 
-The latest version is v0.1 (beta). The app is currently in active development. If you encounter any issues, please open an issue and we will respond.
+The latest version is v0.1 (beta). Keep in mind that the app is currently in beta. If you encounter any issues, please open an issue and we will respond.
 
 APKs are available for download from the Releases section on GitHub. Installation requires Android 8.0 (API 26) or newer. The application is signed with a release key that is consistent across all builds from the same source. For development builds, the debug key is used.
 
@@ -152,7 +152,7 @@ Stardew requires Android 8.0 (API 26) or newer. The application has been tested 
 
 ### Recommended Setup
 
-For the best experience with Stardew, we recommend Android 10 or newer with at least 2GB of RAM. A device with Vulkan support provides the best graphical performance, but the application will fall back to software rendering if Vulkan is not available. For package management, a stable internet connection is recommended for accessing package repositories.
+For the best experience with Stardew, we recommend Android 10 or newer with at least 2GB of RAM. A device with Vulkan support provides the best graphical performance, but the application will fallback to OpenGL ES (GLES) if Vulkan is not available. For package management, a stable internet connection is recommended for accessing package repositories.
 
 ---
 
@@ -162,7 +162,7 @@ For the best experience with Stardew, we recommend Android 10 or newer with at l
 
 Building Stardew from source requires the following tools.
 
-Android Studio Ladybug or newer is required for building the Android application. The Android SDK 34 or newer must be installed and configured. The Android NDK 26 or newer is required for building the native components. The Rust toolchain with cargo-ndk installed is required for building the Rust components. Git is required for cloning the repository.
+Android Studio Ladybug or newer is required for building the Android application. The Android SDK 36 or newer must be installed and configured. The Android NDK 26 or newer is required for building the native components. The Rust toolchain with cargo-ndk installed is required for building the Rust components. Git is required for cloning the repository.
 
 ### Build Steps
 
@@ -211,25 +211,21 @@ UI and UX design is an ongoing need for the project. Rust development, particula
 
 ## License
 
-Stardew is licensed under the Apache 2.0q License. This license applies to all source code in this repository. By using, modifying, or distributing this software, you agree to the terms of the Apache 2.0 License.
-
-### Commercial Licensing
-
-For commercial licensing options, please contact the project maintainers. The Apache 2.0 license does not permit proprietary use of the software unless the source code is made available under the same license.
+Stardew is licensed under the Apache 2.0 [License](https://github.com/stardewdevs/stardew/blob/master/LICENSE). This license applies to all source code in this repository. By using, modifying, or distributing this software, you agree to the terms of the Apache 2.0 License.
 
 ---
 
 ## Acknowledgements
 
-Stardew is inspired by the pioneering work of the Termux project and its contributors. We thank the Termux team for their contributions to the Android open-source ecosystem and for demonstrating what is possible on the Android platform.
+Stardew is inspired by the work of the Termux and they contributors. We thank the Termux team for their contributions to the Android open-source ecosystem and for demonstrating what is possible on the Android platform.
 
 ### Third-Party Libraries
 
-Stardew uses several open-source libraries and components. Alacritty Terminal provides the terminal engine. Portable Pty provides PTY creation and management. JNI RS provides Rust JNI bindings. Vulkan and Vulkano provide GPU-accelerated rendering. Jetpack Compose provides the user interface. MPKG is developed as part of the Stardew project.
+Stardew uses several open-source libraries and components. Alacritty Terminal provides the terminal engine. Portable Pty provides PTY creation and management. JNI RS provides Rust JNI bindings. Vulkan and Vulkano provide GPU-accelerated rendering. Jetpack Compose provides the user interface. mdpkg is developed as part of the Stardew project.
 
 ### Contributors
 
-The Stardew project is grateful to all contributors who have helped with development, testing, documentation, and support. A complete list of contributors is available in the CONTRIBUTORS.md file.
+The Stardew project is grateful to all contributors who have helped with development, testing, documentation, and support. A complete list of contributors is available in the [CONTRIBUTING.md](https://github.com/stardewdevs/stardew/blob/master/docs/CONTRIBUTING.md) file.
 
 ---
 
